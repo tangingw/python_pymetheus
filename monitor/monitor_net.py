@@ -1,4 +1,6 @@
+import os
 import psutil
+import platform
 from datetime import datetime
 from socket import AF_INET, AF_INET6, SOCK_DGRAM, SOCK_STREAM
 
@@ -46,23 +48,26 @@ class MonitorNetwork:
 
         for p in self.net_connections:
 
-            if p.pid in current_process.keys():
+            network_connection_dict = {
+                "protocol": protocol_dict[(p.family, p.type)],
+                "local_address": f"{p.laddr.ip}:{p.laddr.port}",
+                "remote_address": f"{p.raddr.ip}:{p.raddr.port}" if p.raddr else "-"
+            }
+            if ((platform.system() == "Linux" and os.geteuid == 0) or platform.system() == "Windows"):
 
-                local_addr = f"{p.laddr.ip}:{p.laddr.port}"
-                remote_addr = f"{p.raddr.ip}:{p.raddr.port}" if p.raddr else "-"
+                if p.pid in current_process.keys():
 
-                connection_process.append(
-                    {
-                        "process_name": current_process[p.pid].info["name"],
-                        "status": current_process[p.pid].status(),
-                        "started_at": datetime.fromtimestamp(
-                            current_process[p.pid].create_time()
-                        ).isoformat(),
-                        "protocol": protocol_dict[(p.family, p.type)],
-                        "local_address": local_addr,
-                        "remote_address": remote_addr
-                    }
-                )
+                    network_connection_dict.update(
+                        {
+                            "process_name": current_process[p.pid].info["name"],
+                            "status": current_process[p.pid].status(),
+                            "started_at": datetime.fromtimestamp(
+                                current_process[p.pid].create_time()
+                            ).isoformat(),
+                        }
+                    )
+
+                connection_process.append(network_connection_dict)
         
         return connection_process
 
