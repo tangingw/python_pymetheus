@@ -67,7 +67,7 @@ class MonitorNetwork:
                         }
                     )
 
-                connection_process.append(network_connection_dict)
+            connection_process.append(network_connection_dict)
         
         return connection_process
 
