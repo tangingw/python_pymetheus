@@ -1,5 +1,5 @@
 import pytest
-from monitor_platform import MonitorPlatform
+from monitor.monitor_platform import MonitorPlatform
 
 
 @pytest.fixture

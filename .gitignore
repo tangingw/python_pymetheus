@@ -1,2 +1,4 @@
 __pycache__/*
 .pytest_cache/*
+monitor/__pycache__/*
+tests/__pycache__/*

@@ -1,7 +1,8 @@
 import pytest
-from monitor_sys import MonitorCPU
-from monitor_sys import MonitorMemory
-from monitor_sys import MonitorDisk
+import platform
+from monitor.monitor_sys import MonitorCPU
+from monitor.monitor_sys import MonitorMemory
+from monitor.monitor_sys import MonitorDisk
 
 
 @pytest.fixture
@@ -43,14 +44,13 @@ def test_get_memory(get_memory):
 def test_get_all_partition(get_storage):
 
     assert isinstance(get_storage.get_all_partition(), list)
-    assert isinstance(get_storage.get_all_disk_usage()[0], dict)
+
     assert len(
         set(
             get_storage.get_all_partition()[0].keys()
         ).intersection(
             [
-                "device", "mount_point", "fstype", 
-                "opts", "maxfile", "maxpath"
+                "device", "mount_point", "fstype", "opts"
             ]
         )
     )
@@ -58,10 +58,16 @@ def test_get_all_partition(get_storage):
 
 def test_get_disk_usage(get_storage):
 
-    assert isinstance(get_storage.get_disk_usage("C:\\"), dict)
+    mount_point = "/tmp"
+
+    if platform.system() == "Windows":
+
+        mount_point = "C:\\"
+
+    assert isinstance(get_storage.get_disk_usage(mount_point), dict)
     assert len(
         set(
-            get_storage.get_disk_usage("C:\\").keys()
+            get_storage.get_disk_usage(mount_point).keys()
         ).intersection(
             set(
                 ["path", "total", "used", "free", "used_percentage"]

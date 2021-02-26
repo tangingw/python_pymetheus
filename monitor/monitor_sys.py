@@ -41,22 +41,31 @@ class MonitorDisk:
         return [
             {
                 "device": disk.device, "mount_point": disk.mountpoint,
-                "fstype": disk.fstype, "opts": disk.opts,
-                "maxfile": disk.maxfile, "maxpath": disk.maxpath 
+                "fstype": disk.fstype, "opts": disk.opts
             } 
             for disk in self.all_disk_partition
         ]
 
     def get_disk_usage(self, path):
 
-        disk_usage_info = psutil.disk_usage(path)
-        return {
-            "path": path,
-            "total": disk_usage_info.total,
-            "used": disk_usage_info.used,
-            "free": disk_usage_info.free,
-            "used_percentage": disk_usage_info.percent
-        }
+        try:
+            disk_usage_info = psutil.disk_usage(path)
+            return {
+                "path": path,
+                "total": disk_usage_info.total,
+                "used": disk_usage_info.used,
+                "free": disk_usage_info.free,
+                "used_percentage": disk_usage_info.percent
+            }
+
+        except PermissionError:
+            return {
+                "path": path,
+                "total": None,
+                "used": None,
+                "free": None,
+                "used_percentage": None
+            }
 
     def get_all_disk_usage(self):
 
@@ -67,6 +76,7 @@ class MonitorDisk:
 
     def get_disk_all_data(self):
 
+        print(self.get_all_partition())
         return {
             partition["mount_point"]: {
                 "partition": partition,
