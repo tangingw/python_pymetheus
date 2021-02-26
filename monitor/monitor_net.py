@@ -53,7 +53,7 @@ class MonitorNetwork:
                 "local_address": f"{p.laddr.ip}:{p.laddr.port}",
                 "remote_address": f"{p.raddr.ip}:{p.raddr.port}" if p.raddr else "-"
             }
-            if ((platform.system() == "Linux" and os.geteuid == 0) or platform.system() == "Windows"):
+            if ((platform.system() == "Linux" and os.geteuid() == 0) or platform.system() == "Windows"):
 
                 if p.pid in current_process.keys():
 
