@@ -1,4 +1,4 @@
-from flask import Flask, abort, jsonify, request
+from flask import Flask, abort, json, jsonify, request
 
 app = Flask(__name__)
 
@@ -24,10 +24,20 @@ def return_index():
 @app.route("/collect", methods=["GET", "POST"])
 def collect_data():
 
-    if request.method == "POST":
-
-        if request.is_json:
-
-            return jsonify(request.get_json())
+    if request.method == "POST" and request.is_json:
         
+        """to be replaced with DB or ZeroMQ"""
+        return jsonify(request.get_json())
+        
+    abort(403)
+
+
+@app.route("/heartbeat", methods=["GET", "POST"])
+def get_heartbeat():
+
+    if request.method == "POST" and request.is_json:
+
+        """to be replaced with DB or ZeroMQ"""
+        return jsonify(request.get_json())
+    
     abort(403)

@@ -1,7 +1,7 @@
 from datetime import datetime
 import requests
-from monitor_platform import MonitorPlatform
-from monitor_sys import MonitorCPU, MonitorDisk, MonitorMemory
+from monitor.monitor_platform import MonitorPlatform
+from monitor.monitor_sys import MonitorCPU, MonitorDisk, MonitorMemory
 
 
 export_data = {
@@ -34,6 +34,21 @@ export_data.update(
 
 response = requests.post(
     "http://127.0.0.1:5000/collect", json=export_data
+)
+
+print(
+    response.status_code, response.text
+)
+
+
+response = requests.post(
+    "http://127.0.0.1:5000/heartbeat",
+    json={
+        "device": "my device",
+        "ip_address": "192.168.0.185",
+        "status_code": 200,
+        "status_msg": "I am safe"
+    }
 )
 
 print(
