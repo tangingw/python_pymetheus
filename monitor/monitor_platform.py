@@ -18,7 +18,8 @@ class MonitorPlatform:
             "version": platform_uname_obj.version,
             "architecture": platform_uname_obj.machine,
             "processor_type": platform_uname_obj.processor,
-            "python_version": self.python_version
+            "python_version": self.python_version,
+            "operating_system": self.platform_name
         }
 
         if self.platform_name == "Windows":

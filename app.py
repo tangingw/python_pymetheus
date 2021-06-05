@@ -1,7 +1,7 @@
 import time
 from queue import Queue
 
-from flask import Flask, abort, jsonify, request
+from flask import Flask, abort, json, jsonify, request
 #from flask import redirect, url_for
 
 
@@ -96,5 +96,52 @@ def get_data(my_id):
         {
             "status_code": 404,
             "status_msg": f"{my_id}: data not found or not ready"
+        }
+    )
+
+
+@app.route("/register", methods=["GET", "POST"])
+@app.route("/register/<device_id>")
+def check_device_register(device_id=None):
+
+    if request.method == "POST" and request.is_json:
+
+        return jsonify(request.get_json())
+    
+    if device_id:
+    
+        return jsonify(
+            {
+                "status_code": 200,
+                "status_msg": f"This is my device:{device_id}"
+            }
+        )
+    return jsonify(
+        {
+            "status_code": 404,
+            "status_msg": "No Device found" 
+        }
+    )
+
+
+@app.route("/alert")
+@app.route("/alert/<device_id>")
+def get_device_alert(device_id=None):
+
+    if device_id:
+
+        return jsonify(
+            {
+                "status_code": 200,
+                "device_id": device_id,
+                "status_msg": f"{device_id} is in alert!" 
+            }
+        )
+    
+    return jsonify(
+        {
+            "status_code": 200,
+            "device_id": [],
+            "status_msg": "All these devices are in alert"
         }
     )
